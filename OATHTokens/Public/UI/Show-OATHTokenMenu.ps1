@@ -233,9 +233,15 @@ function Show-OATHTokenMenu {
                 }
                 "2" {
                     # Assign existing token to user
-                    $tokenId = Read-Host "Enter token ID"
+                    $tokenId = Read-Host "Enter token ID or serial number"
                     $userId = Read-Host "Enter user ID or UPN"
-                    
+
+                    if ($tokenId -notmatch '-')
+                    {
+                        # Input is a serial number
+                        $tokenId = (Get-OATHToken -SerialNumber $tokenId).Id
+                    }
+
                     Write-Host "Assigning token to user..." -ForegroundColor $headerColor
                     $result = Set-OATHTokenUser -TokenId $tokenId -UserId $userId
                     
